@@ -1,97 +1,117 @@
-import { useEffect, useState } from 'react'
-import * as webllm from "@mlc-ai/web-llm";
-import './app.scss'
-
-
+import { useEffect, useState } from 'react';
+import * as webllm from '@mlc-ai/web-llm';
+import './app.scss';
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [input, setInput] = useState("")
-
-  const [messages, setMessages] = useState([{
-    role: "system",
-    content: "Hello, I am a large language model. How can I assist you today?"
-  }, {
-    role: "user",
-    content: "Hello, what is your name?"
-  }, {
-    role: "model",
-    content: "I am a large language model created by OpenAI. I don't have a personal name."
-  }, {
-    role: "user",
-    content: "What can you do?"
-  }, {
-    role: "model",
-    content: "I can assist you with a variety of tasks, including answering questions, providing information, and generating text." 
-  }
-  ])
-
-  const [engine, setEngine] = useState(null)
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState([
+    {
+      role: 'system',
+      content: "You're a helpful assistant that can help me with my tasks.",
+    },
+  ]);
+  const [engine, setEngine] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+    const selectedModel = 'Llama-3.1-8B-Instruct-q4f32_1-MLC';
 
-    webllm.CreateMLCEngine(
-      selectedModel,
-      {
+    webllm.CreateMLCEngine(selectedModel, {
       initProgressCallback: (initProgress) => {
-        console.log("initProgress", initProgress);
-      }
-    }).then(engine => {
-      setEngine(engine);
+        console.log('initProgress', initProgress);
+      },
     })
-  },[])
+      .then((engineInstance) => {
+        setEngine(engineInstance);
+      })
+      .catch((error) => {
+        console.error('Error initializing the engine:', error);
+      });
+  }, []);
 
   async function sendMessageToLlm() {
+    if (!engine) {
+      console.error('Engine not initialized');
+      return;
+    }
 
-    const tempMessages = [...messages]
-    tempMessages.push({
-      role: "user",
-      content: input
-    })
-    
-    setMessages(tempMessages)
-    setInput("")
+    setIsLoading(true);
 
-    const reply = await engine.chat.completions.create({
-      messages,
-    });
+    const newMessages = [
+      ...messages,
+      { role: 'user', content: input, timestamp: new Date().toLocaleTimeString() },
+    ];
+    setMessages(newMessages);
+    setInput('');
 
-    console.log("reply", reply)
+    try {
+      const reply = await engine.chat.completions.create({ messages: newMessages });
+
+      if (reply?.choices?.[0]) {
+        const text = reply.choices[0].message.content;
+        setMessages([
+          ...newMessages,
+          {
+            role: 'assistant',
+            content: text,
+            timestamp: new Date().toLocaleTimeString(),
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
-   <main>
-    <section>
-      <div className="conversation-area">
+    <main className="chat-app">
+      <header className="chat-header">
+        <h1>Web LLM AI</h1>
+      </header>
 
-        <div className="messages">
-        {
-          messages.map((message, index) => {
-            return (
-              <div className={`message ${message.role}`} key={index}>
-                {message.content}
+      <section className="chat-container">
+        <div className="messages-area">
+          {messages
+            .filter((message) => message.role !== 'system')
+            .map((message, index) => (
+              <div
+                className={`message ${message.role}`}
+                key={index}
+                style={{
+                  animation: 'fadeIn 0.5s ease-in-out',
+                }}
+              >
+                <div className="message-content">{message.content}</div>
+                <span className="timestamp">{message.timestamp}</span>
               </div>
-            )
-          })
-        }
-        </div>
+            ))}
 
+          {isLoading && (
+            <div className="message assistant loading">
+              <div className="loading-indicator">...</div>
+            </div>
+          )}
+        </div>
 
         <div className="input-area">
-          <input
-          onChange={(e) => setInput(e.target.value)}
-          type="text" placeholder='Message LLM' />
-          <button
-          onClick={() => {
-            sendMessageToLlm()
-          }}
-          >Send</button>
+          <div className="input-container">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
+              className="input-field"
+            />
+            <button onClick={sendMessageToLlm} disabled={isLoading} className="send-btn">
+              {isLoading ? <div className="spinner"></div> : 'Send'}
+            </button>
+          </div>
         </div>
-      </div>
-    </section>
-   </main>
-  )
+      </section>
+    </main>
+  );
 }
 
-export default App
+export default App;
