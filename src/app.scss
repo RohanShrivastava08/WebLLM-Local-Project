@@ -13,8 +13,6 @@
       color: #fff;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       font-size: 2rem;
-      font-weight: bold;
-      letter-spacing: 1px;
     }
   
     .chat-container {
@@ -46,21 +44,7 @@
         font-size: 1.2rem;
         line-height: 1.6;
         color: #f1f1f1;
-        position: relative;
         animation: fadeIn 0.5s ease-in-out;
-  
-        .message-content {
-          padding-bottom: 10px;
-        }
-  
-        .timestamp {
-          position: absolute;
-          bottom: 5px;
-          right: 10px;
-          font-size: 0.8rem;
-          color: #888;
-          font-style: italic;
-        }
   
         &.user {
           background: linear-gradient(to right, #6a1b9a, #9c27b0);
@@ -117,13 +101,6 @@
           color: #f1f1f1;
           font-size: 1rem;
           outline: none;
-          transition: 0.3s ease-in-out;
-          padding-left: 1rem;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  
-          &:focus {
-            background-color: #444;
-          }
         }
   
         .send-btn {
@@ -135,12 +112,11 @@
           border-radius: 25px;
           font-weight: bold;
           cursor: pointer;
-          transition: background 0.3s ease, transform 0.2s ease-in-out, box-shadow 0.2s;
+          transition: background 0.3s ease, transform 0.2s ease-in-out;
   
           &:hover {
             background: linear-gradient(145deg, #8e24aa, #5e13a1);
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
           }
   
           &:disabled {

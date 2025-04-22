@@ -37,10 +37,7 @@ function App() {
 
     setIsLoading(true);
 
-    const newMessages = [
-      ...messages,
-      { role: 'user', content: input, timestamp: new Date().toLocaleTimeString() },
-    ];
+    const newMessages = [...messages, { role: 'user', content: input }];
     setMessages(newMessages);
     setInput('');
 
@@ -49,14 +46,7 @@ function App() {
 
       if (reply?.choices?.[0]) {
         const text = reply.choices[0].message.content;
-        setMessages([
-          ...newMessages,
-          {
-            role: 'assistant',
-            content: text,
-            timestamp: new Date().toLocaleTimeString(),
-          },
-        ]);
+        setMessages([...newMessages, { role: 'assistant', content: text }]);
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -68,7 +58,7 @@ function App() {
   return (
     <main className="chat-app">
       <header className="chat-header">
-        <h1>Web LLM AI</h1>
+        <h1>AI Chat Assistant</h1>
       </header>
 
       <section className="chat-container">
@@ -83,8 +73,7 @@ function App() {
                   animation: 'fadeIn 0.5s ease-in-out',
                 }}
               >
-                <div className="message-content">{message.content}</div>
-                <span className="timestamp">{message.timestamp}</span>
+                {message.content}
               </div>
             ))}
 
