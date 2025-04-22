@@ -1,0 +1,73 @@
+main{
+    height: 100%;
+    width: 100%;
+    background-color: #2d2d2d;
+
+    section{
+        height: 100%;
+        width: 100%;
+    }
+
+    .conversation-area {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+    
+    .messages{
+        height: 100%;
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.1em;
+        padding: 0.5em;
+        padding-bottom: 4rem;
+
+     .message{
+        width: fit-content;
+        padding: 0.5rem 1rem;
+        background-color: #4a4a4a;
+        border-radius: 0.5rem;
+        color: rgb(212, 251, 255);
+        max-width: 75%;
+
+        &.user {
+            align-self: flex-end;
+        }
+     }   
+    }    
+
+    .input-area{
+        width: 70%;
+        position: absolute;
+        background-color: #3c3c3c;
+        border: 1px solid 0.5em ;
+        bottom: 2rem;
+    }    
+
+    input {
+        width: 80%;
+        padding: 0.5em 0.7em;
+        outline: none;
+        border-radius: 0.5;
+        background-color: transparent;
+        border: none;
+        color: rgb(206, 206, 206);
+    }
+    
+    button {
+        padding: 0.5em 0.7em;
+        width: 20%;
+        background-color: #161616;
+        border-radius: 0.45rem;
+        border: none;
+        color: white;
+        cursor: pointer;
+    }
+
+
+    }
+
+}
