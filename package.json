@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@mlc-ai/web-llm": "^0.2.78",
+    "marked": "^15.0.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sass": "^1.87.0"
